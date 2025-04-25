@@ -14,13 +14,24 @@ jobs:
     - name: Checkout do código
       uses: actions/checkout@v3
 
-    - name: Instala dependências
+    - name: Instala dependências Python
       run: |
         sudo apt-get update
-        sudo apt-get install -y xvfb firefox-esr curl
+        sudo apt-get install -y wget unzip xvfb libgtk-3-0 libdbus-glib-1-2
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install behave splinter selenium flask
+
+    - name: Instala Firefox e Geckodriver
+      run: |
+        wget -q https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-linux64.tar.gz
+        tar -xzf geckodriver-linux64.tar.gz
+        sudo mv geckodriver /usr/local/bin
+
+        wget -qO firefox.tar.bz2 https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=pt-BR
+        tar -xjf firefox.tar.bz2
+        sudo mv firefox /opt/firefox
+        sudo ln -s /opt/firefox/firefox /usr/local/bin/firefox
 
     - name: Inicia o servidor Flask (em background)
       run: |
