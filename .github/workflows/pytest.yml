@@ -30,10 +30,11 @@ jobs:
       run: |
         ls -R  # Lista recursivamente os arquivos e diretórios
 
-    - name: Rodar testes com Behave e pytest
+    - name: Rodar testes com Behave
       run: |
-        # Rodar testes com Behave
+        # Rodar os testes de comportamento com Behave
         behave features/login.feature --tags=@login
         
-        # Rodar os testes com pytest
-        pytest features/steps/login_steps.py --maxfail=1 --disable-warnings -v
+    - name: Rodar testes com pytest
+      run: |
+        pytest --maxfail=1 --disable-warnings -v

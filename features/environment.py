@@ -1,9 +1,9 @@
-# features/environment.py
-from splinter import Browser
+from selenium import webdriver
 
 def before_all(context):
-    # sempre headless no CI
-    context.browser = Browser('firefox', headless=True)
+    # Aqui você pode inicializar o driver do navegador (usando, por exemplo, o Chrome ou Firefox).
+    context.driver = webdriver.Firefox()
 
 def after_all(context):
-    context.browser.quit()
+    # Fechar o navegador após todos os testes
+    context.driver.quit()
