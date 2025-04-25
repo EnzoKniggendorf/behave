@@ -1,4 +1,5 @@
-#Funcionalidade: Testar sistema de login
+# language: pt
+Funcionalidade: Testar sistema de login
 
   Cenário: Login com credenciais válidas
     Dado que estou na página de login
@@ -55,4 +56,4 @@
   Cenário: Acesso a página restrita sem login
     Dado que não estou logado
     Quando tento acessar "/dashboard"
-    Então devo ser redirecionado para "/login"e
+    Então devo ser redirecionado para "/login"
