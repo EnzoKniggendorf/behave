@@ -1,9 +1,23 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from behave import before_all, after_all
 
+# Função antes de todos os testes
+@before_all
 def before_all(context):
-    # Aqui você pode inicializar o driver do navegador (usando, por exemplo, o Chrome ou Firefox).
-    context.driver = webdriver.Firefox()
+    # Configurações do WebDriver para o Chrome
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')  # Rodar no modo headless (sem interface gráfica)
+    chrome_options.add_argument('--disable-gpu')  # Desabilitar GPU (para servidores sem suporte a gráficos)
+    chrome_options.add_argument('--no-sandbox')  # Necessário para rodar em alguns ambientes CI (como GitHub Actions)
 
+    # Inicializando o WebDriver com o ChromeDriver
+    context.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+
+# Função após todos os testes
+@after_all
 def after_all(context):
-    # Fechar o navegador após todos os testes
+    # Fechar o navegador após os testes
     context.driver.quit()
