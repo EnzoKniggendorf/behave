@@ -14,14 +14,14 @@ def setup_driver(context):
     # Inicializando o WebDriver com o ChromeDriver
     context.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-# Função de hook para antes de todos os testes
+# Função para parar o WebDriver
+def teardown_driver(context):
+    context.driver.quit()
+
+# Usando o fixture para configurar e finalizar o WebDriver
 def before_all(context):
     setup_driver(context)
 
-# Função de hook para após todos os testes
 def after_all(context):
-    context.driver.quit()
+    teardown_driver(context)
 
-# Usando os hooks de antes e depois de todos os testes
-use_fixture(before_all, 'before')
-use_fixture(after_all, 'after')
