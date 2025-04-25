@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from behave import before_all, after_all
+from behave import use_fixture
 
 # Função para configurar o WebDriver
 def setup_driver(context):
@@ -15,11 +15,13 @@ def setup_driver(context):
     context.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 # Função de hook para antes de todos os testes
-@before_all
 def before_all(context):
     setup_driver(context)
 
 # Função de hook para após todos os testes
-@after_all
 def after_all(context):
     context.driver.quit()
+
+# Usando os hooks de antes e depois de todos os testes
+use_fixture(before_all, 'before')
+use_fixture(after_all, 'after')
