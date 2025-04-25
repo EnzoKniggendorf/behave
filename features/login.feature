@@ -1,59 +1,68 @@
-# language: pt
-Funcionalidade: Testar sistema de login
+Feature: Login do usuário
 
-  Cenário: Login com credenciais válidas
-    Dado que estou na página de login
-    Quando insiro um email válido "usuario@teste.com" e senha "123456"
-    E clico em "Entrar"
-    Então devo ser redirecionado para o dashboard
+  # Cenário 1: Login bem-sucedido com dados válidos
+  Scenario: Usuário logado com sucesso
+    Given que estou na página de login
+    When insiro um email válido "usuario@teste.com" e senha "123456"
+    And clico em "Entrar"
+    Then devo ser redirecionado para o dashboard
 
-  Cenário: Login com senha incorreta
-    Dado que estou na página de login
-    Quando insiro um email válido "usuario@teste.com" e senha "errada"
-    E clico em "Entrar"
-    Então devo ver a mensagem "Senha incorreta"
+  # Cenário 2: Falha no login com senha errada
+  Scenario: Usuário falha ao fazer login com senha errada
+    Given que estou na página de login
+    When insiro um email válido "usuario@teste.com" e senha "senha_errada"
+    And clico em "Entrar"
+    Then devo ver a mensagem "Credenciais inválidas"
 
-  Cenário: Login com email não cadastrado
-    Dado que estou na página de login
-    Quando insiro um email "naoexiste@teste.com" e senha "123456"
-    E clico em "Entrar"
-    Então devo ver a mensagem "Email não cadastrado"
+  # Cenário 3: Falha no login com email inválido
+  Scenario: Usuário falha ao fazer login com email inválido
+    Given que estou na página de login
+    When insiro um email inválido "usuario_invalido@teste.com" e senha "123456"
+    And clico em "Entrar"
+    Then devo ver a mensagem "Credenciais inválidas"
 
-  Cenário: Login com email em branco
-    Dado que estou na página de login
-    Quando deixo o email em branco e insiro uma senha "123456"
-    E clico em "Entrar"
-    Então devo ver a mensagem "Email é obrigatório"
+  # Cenário 4: Falha no login com campos em branco
+  Scenario: Usuário tenta fazer login com campos em branco
+    Given que estou na página de login
+    When insiro um email vazio e senha vazia
+    And clico em "Entrar"
+    Then devo ver a mensagem "Preencha todos os campos"
 
-  Cenário: Login com senha em branco
-    Dado que estou na página de login
-    Quando insiro um email "usuario@teste.com" e deixo a senha em branco
-    E clico em "Entrar"
-    Então devo ver a mensagem "Senha é obrigatória"
+  # Cenário 5: Login bem-sucedido e logout
+  Scenario: Usuário logado e realiza o logout
+    Given que fiz login com sucesso
+    When clico em "Sair"
+    Then devo ser redirecionado para a página de login
 
-  Cenário: Login com email inválido (sem @)
-    Dado que estou na página de login
-    Quando insiro um email "usuario.teste.com" e senha "123456"
-    E clico em "Entrar"
-    Então devo ver a mensagem "Email inválido"
+  # Cenário 6: Tentativa de acessar o dashboard sem estar logado
+  Scenario: Usuário não logado tenta acessar o dashboard
+    Given que não estou logado
+    When tento acessar "/dashboard"
+    Then devo ser redirecionado para "/login"
 
-  Cenário: Tentativa de login após 3 falhas
-    Dado que estou na página de login
-    Quando falho o login 3 vezes
-    Então minha conta deve ser bloqueada temporariamente
+  # Cenário 7: Login após falhas consecutivas
+  Scenario: Usuário falha no login 3 vezes consecutivas
+    Given que estou na página de login
+    When falho o login 3 vezes
+    Then devo ver a mensagem "Conta bloqueada após múltiplas tentativas"
 
-  Cenário: Recuperação de senha
-    Dado que estou na página de login
-    Quando clico em "Esqueci minha senha"
-    E insiro meu email "usuario@teste.com"
-    Então devo receber um email de recuperação
+  # Cenário 8: Email válido, mas sem senha
+  Scenario: Usuário insere um email válido mas deixa a senha em branco
+    Given que estou na página de login
+    When insiro um email válido "usuario@teste.com" e deixo a senha em branco
+    And clico em "Entrar"
+    Then devo ver a mensagem "Senha é obrigatória"
 
-  Cenário: Logout após login bem-sucedido
-    Dado que fiz login com sucesso
-    Quando clico em "Sair"
-    Então devo ser redirecionado para a página de login
+  # Cenário 9: Recuperação de senha com email válido
+  Scenario: Usuário solicita recuperação de senha
+    Given que estou na página de login
+    When clico em "Esqueci minha senha"
+    And insiro meu email "usuario@teste.com"
+    Then devo receber um email de recuperação
 
-  Cenário: Acesso a página restrita sem login
-    Dado que não estou logado
-    Quando tento acessar "/dashboard"
-    Então devo ser redirecionado para "/login"
+  # Cenário 10: Tentativa de login com email já registrado mas sem ativação de conta
+  Scenario: Usuário tenta fazer login com conta não ativada
+    Given que estou na página de login
+    When insiro um email válido "usuario_nao_ativado@teste.com" e senha "123456"
+    And clico em "Entrar"
+    Then devo ver a mensagem "Conta não ativada. Verifique seu email para ativação"
