@@ -1,5 +1,4 @@
-# features/login.feature
-Funcionalidade: Testar sistema de login
+#Funcionalidade: Testar sistema de login
 
   Cenário: Login com credenciais válidas
     Dado que estou na página de login
